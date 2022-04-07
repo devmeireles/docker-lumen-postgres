@@ -1,13 +1,5 @@
 version: '3.8'
 services:
-  php:
-    image: php:8.1-fpm  
-    container_name: php-fpm
-    volumes:
-      - ./:/src
-    command: /src/docker/install.sh
-    ports:
-      - 8000:8000
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -23,6 +15,17 @@ services:
     restart: always
     ports:
       - 8080:8080
+  php:
+    container_name: php-fpm
+    build:
+      context: ./docker/php-fpm
+    depends_on:
+      - db
+    volumes:
+      - ./:/src
+    command: /src/docker/install.sh
+    ports:
+      - 8000:8000
 volumes:
   db:
     driver: local
